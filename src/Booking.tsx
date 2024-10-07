@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import WeekRow from './WeekRow';
 import { getWeeksInMonth } from './dateUtils';
@@ -8,11 +8,16 @@ const BookingComponent: React.FC = () => {
   const { bookingData } = useBooking();
   const [currentMonth, setCurrentMonth] = useState(moment());
   const [people, setPeople] = useState<number>(1);
+  const [isBookingAvailable, setIsBookingAavilable] = useState<boolean>(false);
   const [selectedRange, setSelectedRange] = useState<{ start: moment.Moment | null, end: moment.Moment | null }>({
     start: null,
     end: null,
   });
 
+  useEffect(() => {
+    setIsBookingAavilable(!!selectedRange.start && !!selectedRange.end && checkAvailability);
+  }, [selectedRange]);
+  
   const handleNextMonth = () => {
     setCurrentMonth(prev => prev.clone().add(1, 'month'));
   };
@@ -23,9 +28,10 @@ const BookingComponent: React.FC = () => {
 
   const handleDateClick = (date: moment.Moment) => {
     const { start, end } = selectedRange;
-  
     if (!start) {
       setSelectedRange({ start: date, end: null });
+    } else if (start.isSame(date)) {
+      setSelectedRange({ start: null, end: null });
     } else if (start && !end) {
       if (date.isAfter(start)) {
         setSelectedRange({ start, end: date });
@@ -42,16 +48,16 @@ const isDateInRange = (date: moment.Moment) => {
   return date.isSameOrAfter(start) && date.isSameOrBefore(end || start);
 };
 
-  const checkAvailabilityInRange = () => {
+  const checkAvailability = () => {
     const { start, end } = selectedRange;
     if (!start || !end) return false;
 
     let current = start.clone();
     while (current.isSameOrBefore(end)) {
       const weekData = bookingData[current.clone().startOf('week').format('DD-MM-YY')];
-      const formattedDate = current.format('YYYY-MM-DD');
-      const slots = weekData ? weekData[formattedDate] : undefined;
-      if (slots === undefined || slots < people) {
+      const formattedDate = current.format('DD/MM/YY');
+      const slots = weekData ? weekData[formattedDate] : 0;
+      if (slots < people) {
         return false;
       }
       current.add(1, 'day');
@@ -113,8 +119,8 @@ const isDateInRange = (date: moment.Moment) => {
       <h2>{currentMonth.clone().add(1, 'month').format('MMMM YYYY')}</h2>
       {renderCalendar(currentMonth.clone().add(1, 'month'))}
 
-      <button onClick={() => alert(checkAvailabilityInRange() ? 'All dates available' : 'Not all dates available')}>
-        Check Availability in Range
+      <button style={{ backgroundColor: isBookingAvailable ? 'green' : 'grey' }} onClick={() => isBookingAvailable ?? alert('next')}>
+        Next
       </button>
     </div>
   );

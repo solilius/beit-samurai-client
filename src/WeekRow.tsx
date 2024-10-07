@@ -12,9 +12,8 @@ type WeekRowProps = {
 
 type DayInfo = {
   date: moment.Moment;
-  displyedDate: string;
   backgroundColor: string;
-  isClickable: boolean;
+  isPlaceholder: boolean;
   availableSlots: number | undefined;
   isAvailable: boolean;
 };
@@ -34,30 +33,34 @@ const WeekRow: React.FC<WeekRowProps> = ({ week, people, month, handleDateClick,
     fetchData();
   }, [startOfWeek, weekData, getBookingData]);
 
-  const getBackgroundColor = (isInRange: boolean, isLowSlots: boolean, isInMonth: boolean) => {
+  const getBackgroundColor = (isInRange: boolean, isAvailable: boolean, isInMonth: boolean) => {
     if (!isInMonth) {
       return 'transparent';
     }
-    return isInRange ? 'blue' : isLowSlots ? 'red' : 'grey';
+
+    if (isInRange) {
+      return isAvailable ? 'blue' : 'lightblue';
+    }
+    return isAvailable ? 'white' : 'red';
   };
 
   const daysInfo: DayInfo[] = useMemo(() => {
+    
     return week.map((sunday, dayIndex) => {
       const day = sunday.clone().add(dayIndex, 'day');
       const isInMonth = day.month() === month.month();
-      const formattedDate = day.clone().add(dayIndex, 'day').format('DD/MM/YY');
-      const slots = weekData ? weekData[formattedDate] : undefined;
-      const isLowSlots = slots !== undefined && slots < people;
+      const formattedDate = day.clone().format('DD/MM/YY');
+      const slots = weekData ? weekData[formattedDate] : 0;
+      const isAvailable = slots >= people;
       const isInRange = isDateInRange(day);
-      const backgroundColor = getBackgroundColor(isInRange, isLowSlots, isInMonth);
+      const backgroundColor = getBackgroundColor(isInRange, isAvailable, isInMonth);
 
       return {
         date: day.clone(),
-        displyedDate: isInMonth ? day.clone().format('D') : '',
         backgroundColor,
-        isClickable: isInMonth,
         availableSlots: slots,
-        isAvailable: slots !== undefined && slots >= people,
+        isAvailable: slots >= people,
+        isPlaceholder: !isInMonth,
       };
     });
   }, [week, weekData, people, isDateInRange]);
@@ -67,10 +70,15 @@ const WeekRow: React.FC<WeekRowProps> = ({ week, people, month, handleDateClick,
       {daysInfo.map((dayInfo, index) => (
         <td
           key={index}
-          style={{ backgroundColor: dayInfo.backgroundColor }}
-          onClick={dayInfo.isClickable ? () => handleDateClick(dayInfo.date) : undefined}
+          style={ {
+            backgroundColor: dayInfo.backgroundColor,
+            border: dayInfo.isPlaceholder ? '' : 'solid 1px black',
+            width: '100px',
+          }}
+          onClick={!dayInfo.isPlaceholder ? () => handleDateClick(dayInfo.date) : undefined}
         >
-          {dayInfo.displyedDate}
+          <h3>{!dayInfo.isPlaceholder && dayInfo.date.format('D')} </h3>
+          <span>{!dayInfo.isPlaceholder && dayInfo.availableSlots} </span>
         </td>
       ))}
     </tr>
