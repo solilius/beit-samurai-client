@@ -22,21 +22,24 @@ const BookingComponent: React.FC = () => {
   };
 
   const handleDateClick = (date: moment.Moment) => {
-    if (!selectedRange.start || (selectedRange.start && selectedRange.end)) {
+    const { start, end } = selectedRange;
+  
+    if (!start) {
       setSelectedRange({ start: date, end: null });
-    } else if (selectedRange.start && !selectedRange.end) {
-      if (date.isAfter(selectedRange.start)) {
-        setSelectedRange({ start: selectedRange.start, end: date });
+    } else if (start && !end) {
+      if (date.isAfter(start)) {
+        setSelectedRange({ start, end: date });
       } else {
         setSelectedRange({ start: date, end: null });
       }
+    } else {
+      setSelectedRange({ start: date, end: null });
     }
-  };
+  }
 
 const isDateInRange = (date: moment.Moment) => {
   const { start, end } = selectedRange;
-  if (!start || !end) return false; // Ensure it returns false when no valid range is selected
-  return date.isSameOrAfter(start) && date.isSameOrBefore(end);
+  return date.isSameOrAfter(start) && date.isSameOrBefore(end || start);
 };
 
   const checkAvailabilityInRange = () => {
