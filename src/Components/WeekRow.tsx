@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import moment from 'moment';
-import { useBooking } from './BookingContext';
+import { useBooking } from '../BookingContext';
 
 type WeekRowProps = {
   week: moment.Moment[];

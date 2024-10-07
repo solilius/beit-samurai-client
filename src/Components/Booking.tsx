@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import WeekRow from './WeekRow';
-import { getWeeksInMonth } from './dateUtils';
-import { useBooking } from './BookingContext';
+import { useBooking } from '../BookingContext';
 
 const BookingComponent: React.FC = () => {
   const { bookingData } = useBooking();
@@ -124,6 +123,25 @@ const isDateInRange = (date: moment.Moment) => {
       </button>
     </div>
   );
+};
+
+const getWeeksInMonth = (month: moment.Moment) => {
+  const startOfMonth = month.clone().startOf('month');
+  const endOfMonth = month.clone().endOf('month');
+  const weeks = [];
+
+  // Adjust the start to the beginning of the week that includes the first day of the month.
+  let currentDay = startOfMonth.clone().startOf('week');
+
+  while (currentDay.isBefore(endOfMonth) || currentDay.isSame(endOfMonth)) {
+    const week = Array(7)
+      .fill(null)
+      .map(() => currentDay.clone());
+    weeks.push(week);
+    currentDay.add(1, 'week');
+  }
+
+  return weeks;
 };
 
 export default BookingComponent;
