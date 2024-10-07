@@ -15,10 +15,12 @@ const Container = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
-const Header = styled.h2`
-  text-align: center;
-  color: #2d4059; /* Dark blue for a calm and inviting feel */
-  font-size: 1.8rem;
+const TitleImage = styled.img`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 30vw;
 `;
 
 const CalendarContainer = styled.div`
@@ -45,10 +47,11 @@ const Button = styled.button<{ primary?: boolean }>`
   }
 `;
 
-const Input = styled.input`
-  width: 100%;
+const PeopleInput = styled.input`
+  width: 10%;
   padding: 10px;
   margin: 10px 0;
+  margin-top: 30vw;
   border-radius: 4px;
   border: 1px solid #dddddd;
   font-size: 1rem;
@@ -169,14 +172,17 @@ const BookingComponent: React.FC = () => {
 
   return (
     <Container>
-      <Header>Booking for Your Stay</Header>
-      <Input
-        type="number"
-        value={people}
-        onChange={(e) => setPeople(Number(e.target.value))}
-        min="1"
-        placeholder="Number of People"
-      />
+      <TitleImage src='/beit-samurai.jpg' />
+        <span>Number of People: &nbsp;&nbsp;</span> 
+        <PeopleInput
+          type="number"
+          value={people}
+          onChange={(e) => setPeople(Number(e.target.value))}
+          min="1"
+          max="15"
+          placeholder="Number of People"
+        />
+
 
       <ButtonGroup>
         <Button onClick={handlePreviousMonth}>Previous Month</Button>

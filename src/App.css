@@ -68,10 +68,6 @@ td {
   background-color: #ffffff; /* White background for table cells */
 }
 
-td:hover {
-  background-color: #f0f8ff; /* Light blue background when hovering over a cell */
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   body {

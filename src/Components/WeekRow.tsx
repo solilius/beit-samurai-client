@@ -32,10 +32,6 @@ const TableCell = styled.td<{ backgroundColor: string; isClickable: boolean }>`
   cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'default')};
   opacity: ${({ isClickable }) => (isClickable ? 1 : 0.5)};
   transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: ${({ isClickable }) => (isClickable ? '#f0f8ff' : 'transparent')};
-  }
 `;
 
 const CellContent = styled.div`
@@ -80,12 +76,12 @@ const WeekRow: React.FC<WeekRowProps> = ({ week, people, month, handleDateClick,
 
   const getBackgroundColor = (isInRange: boolean, isAvailable: boolean, isInMonth: boolean) => {
     if (!isInMonth) {
-      return 'transparent'; // Transparent for days not in the month
+      return 'transparent';
     }
     if (isInRange) {
-      return isAvailable ? '#a8d5ba' : '#ffcccc'; // Light green for available in range, light red for unavailable
+      return isAvailable ? '#a8d5ba' : '#ff7070'; // Light green for available in range, light red for unavailable
     }
-    return isAvailable ? '#ffffff' : '#ffd7d7'; // White for available, light pink for unavailable
+    return isAvailable ? '#ffffff' : '#fae3e3'; // White for available, light pink for unavailable
   };
 
   const daysInfo: DayInfo[] = useMemo(() => {
