@@ -5,24 +5,6 @@ import styled from 'styled-components';
 import WeekRow from './WeekRow';
 import { useBooking } from '../BookingContext';
 
-// Styled components
-const Container = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f5f5f5; /* Light background to resemble traditional Japanese paper */
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
-
-const TitleImage = styled.img`
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 30vw;
-`;
-
 const CalendarContainer = styled.div`
   margin: 20px 0;
 `;
@@ -51,7 +33,6 @@ const PeopleInput = styled.input`
   width: 10%;
   padding: 10px;
   margin: 10px 0;
-  margin-top: 30vw;
   border-radius: 4px;
   border: 1px solid #dddddd;
   font-size: 1rem;
@@ -171,8 +152,7 @@ const BookingComponent: React.FC = () => {
   };
 
   return (
-    <Container>
-      <TitleImage src='/beit-samurai.jpg' />
+    <>
         <span>Number of People: &nbsp;&nbsp;</span> 
         <PeopleInput
           type="number"
@@ -202,7 +182,7 @@ const BookingComponent: React.FC = () => {
       >
         Next
       </Button>
-    </Container>
+    </>
   );
 };
 
