@@ -1,22 +1,81 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
+import styled from 'styled-components';
 import WeekRow from './WeekRow';
 import { useBooking } from '../BookingContext';
 
+// Styled components
+const Container = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5; /* Light background to resemble traditional Japanese paper */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+const Header = styled.h2`
+  text-align: center;
+  color: #2d4059; /* Dark blue for a calm and inviting feel */
+  font-size: 1.8rem;
+`;
+
+const CalendarContainer = styled.div`
+  margin: 20px 0;
+`;
+
+const Button = styled.button<{ primary?: boolean }>`
+  background-color: ${({ primary }) => (primary ? '#4e9f3d' : '#dddddd')};
+  color: ${({ primary }) => (primary ? '#ffffff' : '#333')};
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: ${({ primary }) => (primary ? '#3e8f32' : '#cccccc')};
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+  border: 1px solid #dddddd;
+  font-size: 1rem;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+
 const BookingComponent: React.FC = () => {
+  const navigate = useNavigate();
   const { bookingData } = useBooking();
   const [currentMonth, setCurrentMonth] = useState(moment());
   const [people, setPeople] = useState<number>(1);
-  const [isBookingAvailable, setIsBookingAavilable] = useState<boolean>(false);
+  const [isBookingAvailable, setIsBookingAvailable] = useState<boolean>(false);
   const [selectedRange, setSelectedRange] = useState<{ start: moment.Moment | null, end: moment.Moment | null }>({
     start: null,
     end: null,
   });
 
   useEffect(() => {
-    setIsBookingAavilable(!!selectedRange.start && !!selectedRange.end && checkAvailability);
+    setIsBookingAvailable(!!selectedRange.start && !!selectedRange.end && checkAvailability());
   }, [selectedRange]);
-  
+
   const handleNextMonth = () => {
     setCurrentMonth(prev => prev.clone().add(1, 'month'));
   };
@@ -40,12 +99,12 @@ const BookingComponent: React.FC = () => {
     } else {
       setSelectedRange({ start: date, end: null });
     }
-  }
+  };
 
-const isDateInRange = (date: moment.Moment) => {
-  const { start, end } = selectedRange;
-  return date.isSameOrAfter(start) && date.isSameOrBefore(end || start);
-};
+  const isDateInRange = (date: moment.Moment) => {
+    const { start, end } = selectedRange;
+    return date.isSameOrAfter(start) && date.isSameOrBefore(end || start);
+  };
 
   const checkAvailability = () => {
     const { start, end } = selectedRange;
@@ -64,66 +123,84 @@ const isDateInRange = (date: moment.Moment) => {
     return true;
   };
 
+  const navigateToForm = () => {
+    navigate('/form', {
+      state: {
+        people,
+        start: selectedRange.start!.format('YYYY/MM/DD'),
+        end: selectedRange.end!.format('YYYY/MM/DD'),
+      },
+    });
+  };
+
   const renderCalendar = (month: moment.Moment) => {
     const weeks = getWeeksInMonth(month);
 
     return (
-      <table>
-        <thead>
-          <tr>
-            <th>Sun</th>
-            <th>Mon</th>
-            <th>Tue</th>
-            <th>Wed</th>
-            <th>Thu</th>
-            <th>Fri</th>
-            <th>Sat</th>
-          </tr>
-        </thead>
-        <tbody>
-          {weeks.map((week, weekIndex) => (
-            <WeekRow
-              key={weekIndex}
-              week={week}
-              month={month}
-              people={people}
-              handleDateClick={handleDateClick}
-              isDateInRange={isDateInRange}
-            />
-          ))}
-        </tbody>
-      </table>
+      <CalendarContainer>
+        <table>
+          <thead>
+            <tr>
+              <th>Sun</th>
+              <th>Mon</th>
+              <th>Tue</th>
+              <th>Wed</th>
+              <th>Thu</th>
+              <th>Fri</th>
+              <th>Sat</th>
+            </tr>
+          </thead>
+          <tbody>
+            {weeks.map((week, weekIndex) => (
+              <WeekRow
+                key={weekIndex}
+                week={week}
+                month={month}
+                people={people}
+                handleDateClick={handleDateClick}
+                isDateInRange={isDateInRange}
+              />
+            ))}
+          </tbody>
+        </table>
+      </CalendarContainer>
     );
   };
 
   return (
-    <div>
-      <label htmlFor="people">Number of People:</label>
-      <input
+    <Container>
+      <Header>Booking for Your Stay</Header>
+      <Input
         type="number"
-        id="people"
         value={people}
         onChange={(e) => setPeople(Number(e.target.value))}
         min="1"
+        placeholder="Number of People"
       />
 
-      <div>
-        <button onClick={handlePreviousMonth}>Previous Month</button>
-        <button onClick={handleNextMonth}>Next Month</button>
-      </div>
+      <ButtonGroup>
+        <Button onClick={handlePreviousMonth}>Previous Month</Button>
+        <Button onClick={handleNextMonth}>Next Month</Button>
+      </ButtonGroup>
 
-      <h2>{currentMonth.format('MMMM YYYY')}</h2>
+      <h3>{currentMonth.format('MMMM YYYY')}</h3>
       {renderCalendar(currentMonth)}
 
-      <h2>{currentMonth.clone().add(1, 'month').format('MMMM YYYY')}</h2>
+      <h3>{currentMonth.clone().add(1, 'month').format('MMMM YYYY')}</h3>
       {renderCalendar(currentMonth.clone().add(1, 'month'))}
 
-      <button style={{ backgroundColor: isBookingAvailable ? 'green' : 'grey' }} onClick={() => isBookingAvailable ?? alert('next')}>
+      <Button
+        primary={isBookingAvailable}
+        onClick={() => isBookingAvailable && navigateToForm()}
+        disabled={!isBookingAvailable}
+      >
         Next
-      </button>
-    </div>
+      </Button>
+    </Container>
   );
 };
+
+export default BookingComponent;
 
 const getWeeksInMonth = (month: moment.Moment) => {
   const startOfMonth = month.clone().startOf('month');
@@ -143,5 +220,3 @@ const getWeeksInMonth = (month: moment.Moment) => {
 
   return weeks;
 };
-
-export default BookingComponent;

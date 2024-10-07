@@ -1,12 +1,18 @@
 import React from 'react';
-import { BookingProvider } from './BookingContext'; // Import the BookingProvider
-import BookingComponent from './Components/Booking'; // Import the BookingComponent
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import BookingComponent from './Components/Booking';
+import BookingForm from './Components/BookingForm'; // The form page component
+import './App.css';
 
 const App: React.FC = () => {
   return (
-    <BookingProvider>
-      <BookingComponent />
-    </BookingProvider>
+    <Router>
+      <Routes>
+        <Route path="/booking" element={<BookingComponent />} />
+        <Route path="/form" element={<BookingForm />} />
+        <Route path="/" element={<BookingComponent />} />
+      </Routes>
+    </Router>
   );
 };
 
