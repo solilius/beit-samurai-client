@@ -71,22 +71,25 @@ const AvailableSlots = styled.span`
   color: #4e9f3d;
   align-self: center;
   margin-top: auto;
+  margin-bottom: 2px;
 `;
 
 const WeekRow: React.FC<WeekRowProps> = ({ week, people, month, handleDateClick, isDateInRange }) => {
   const { bookingData, getBookingData } = useBooking();
+  const [isLoading, setIsLoading] = useState(true);
   const startOfWeek = week[0];
   const formattedWeek = startOfWeek.format('DD-MM-YY');
   const weekData = bookingData[formattedWeek];
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true); // Set loading to true before fetching data
       if (!weekData) {
+        setIsLoading(true);
         await getBookingData(startOfWeek.toDate());
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
       }
-      setIsLoading(false); // Set loading to false after fetching data
     };
     fetchData();
   }, [startOfWeek, weekData, getBookingData]);
@@ -139,7 +142,7 @@ const WeekRow: React.FC<WeekRowProps> = ({ week, people, month, handleDateClick,
               { isLoading ? (
                 <Spinner /> 
               ) : (
-                <AvailableSlots>{dayInfo.availableSlots} slots</AvailableSlots>
+                <AvailableSlots>{dayInfo.availableSlots} beds</AvailableSlots>
               )}
             </CellContent>
           )}

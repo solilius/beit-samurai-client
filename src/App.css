@@ -59,9 +59,12 @@ table {
 }
 
 th, td {
-  padding: 0.5em;
   border: 1px solid #dddddd;
   text-align: center;
+}
+
+thead th {
+  padding: 0.5em;
 }
 
 td {
