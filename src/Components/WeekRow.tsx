@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
 import { useBooking } from '../BookingContext';
@@ -22,6 +22,20 @@ type DayInfo = {
 // Styled Components for Day Cells and Rows
 const TableRow = styled.tr``;
 
+const Spinner = styled.div`
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #5d718c; /* Dark blue color */
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  animation: spin 1s linear infinite;
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+
 const TableCell = styled.td<{ $backgroundColor: string; $isClickable: boolean }>`
   background-color: ${({ $backgroundColor }) => $backgroundColor};
   border: solid 1px #ddd;
@@ -39,24 +53,24 @@ const CellContent = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Center the date number */
-  align-items: center; /* Center content horizontally */
+  justify-content: center;
+  align-items: center;
 `;
 
 const DateNumber = styled.h3`
   margin: 0;
   font-size: 0.9rem;
   color: #2d4059; /* Dark blue for the date number */
-  flex-grow: 1; /* Allow it to grow to center vertically */
+  flex-grow: 1;
   display: flex;
-  align-items: center; /* Center text vertically */
+  align-items: center;
 `;
 
 const AvailableSlots = styled.span`
   font-size: 0.6rem;
   color: #4e9f3d;
-  align-self: center; /* Center horizontally */
-  margin-top: auto; /* Push it to the bottom */
+  align-self: center;
+  margin-top: auto;
 `;
 
 const WeekRow: React.FC<WeekRowProps> = ({ week, people, month, handleDateClick, isDateInRange }) => {
@@ -64,19 +78,25 @@ const WeekRow: React.FC<WeekRowProps> = ({ week, people, month, handleDateClick,
   const startOfWeek = week[0];
   const formattedWeek = startOfWeek.format('DD-MM-YY');
   const weekData = bookingData[formattedWeek];
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true); // Set loading to true before fetching data
       if (!weekData) {
         await getBookingData(startOfWeek.toDate());
       }
+      setIsLoading(false); // Set loading to false after fetching data
     };
     fetchData();
   }, [startOfWeek, weekData, getBookingData]);
 
-  const getBackgroundColor = (isInRange: boolean, isAvailable: boolean, isInMonth: boolean) => {
+  const getBackgroundColor = (isInRange: boolean, isAvailable: boolean, isInMonth: boolean, isLoading: boolean) => {
     if (!isInMonth) {
       return 'transparent';
+    }
+    if (isLoading) {
+      return '#ffffff'; // Default to white while loading
     }
     if (isInRange) {
       return isAvailable ? '#a8d5ba' : '#ff7070'; // Light green for available in range, light red for unavailable
@@ -89,10 +109,10 @@ const WeekRow: React.FC<WeekRowProps> = ({ week, people, month, handleDateClick,
       const day = sunday.clone().add(dayIndex, 'day');
       const isInMonth = day.month() === month.month();
       const formattedDate = day.clone().format('DD/MM/YY');
-      const slots = weekData ? weekData[formattedDate] : 0;
-      const isAvailable = slots >= people;
+      const slots = weekData ? weekData[formattedDate] : undefined;
+      const isAvailable = slots !== undefined && slots >= people;
       const isInRange = isDateInRange(day);
-      const backgroundColor = getBackgroundColor(isInRange, isAvailable, isInMonth);
+      const backgroundColor = getBackgroundColor(isInRange, isAvailable, isInMonth, isLoading);
 
       return {
         date: day.clone(),
@@ -116,7 +136,11 @@ const WeekRow: React.FC<WeekRowProps> = ({ week, people, month, handleDateClick,
           {!dayInfo.isPlaceholder && (
             <CellContent>
               <DateNumber>{dayInfo.date.format('D')}</DateNumber>
-              <AvailableSlots>{dayInfo.availableSlots} slots</AvailableSlots>
+              { isLoading ? (
+                <Spinner /> 
+              ) : (
+                <AvailableSlots>{dayInfo.availableSlots} slots</AvailableSlots>
+              )}
             </CellContent>
           )}
         </TableCell>
