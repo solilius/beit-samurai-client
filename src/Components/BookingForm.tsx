@@ -71,7 +71,6 @@ const BookingForm: React.FC = () => {
     const { people = 1, start, end } = location.state as LocationState || {};
 
     useEffect(() => {
-        console.log(location?.state);
         if (!location.state || !people || !start || !end) {
             navigate('/booking');
         }

@@ -9,9 +9,9 @@ const CalendarContainer = styled.div`
   margin: 20px 0;
 `;
 
-const Button = styled.button<{ primary?: boolean }>`
-  background-color: ${({ primary }) => (primary ? '#4e9f3d' : '#dddddd')};
-  color: ${({ primary }) => (primary ? '#ffffff' : '#333')};
+const Button = styled.button<{ $primary?: boolean }>`
+  background-color: ${({ $primary }) => ($primary ? '#4e9f3d' : '#dddddd')};
+  color: ${({ $primary }) => ($primary ? '#ffffff' : '#333')};
   border: none;
   padding: 10px 15px;
   border-radius: 4px;
@@ -20,7 +20,7 @@ const Button = styled.button<{ primary?: boolean }>`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: ${({ primary }) => (primary ? '#3e8f32' : '#cccccc')};
+    background-color: ${({ $primary }) => ($primary ? '#3e8f32' : '#cccccc')};
   }
 
   &:disabled {
@@ -176,7 +176,7 @@ const BookingComponent: React.FC = () => {
       {renderCalendar(currentMonth.clone().add(1, 'month'))}
 
       <Button
-        primary={isBookingAvailable}
+        $primary={isBookingAvailable}
         onClick={() => isBookingAvailable && navigateToForm()}
         disabled={!isBookingAvailable}
       >

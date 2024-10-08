@@ -22,15 +22,15 @@ type DayInfo = {
 // Styled Components for Day Cells and Rows
 const TableRow = styled.tr``;
 
-const TableCell = styled.td<{ backgroundColor: string; isClickable: boolean }>`
-  background-color: ${({ backgroundColor }) => backgroundColor};
+const TableCell = styled.td<{ $backgroundColor: string; $isClickable: boolean }>`
+  background-color: ${({ $backgroundColor }) => $backgroundColor};
   border: solid 1px #ddd;
   width: 12.5vw;
   height: 12.5vw;
   text-align: center;
   vertical-align: top;
-  cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'default')};
-  opacity: ${({ isClickable }) => (isClickable ? 1 : 0.5)};
+  cursor: ${({ $isClickable }) => ($isClickable ? 'pointer' : 'default')};
+  opacity: ${({ $isClickable }) => ($isClickable ? 1 : 0.5)};
   transition: background-color 0.3s ease;
 `;
 
@@ -109,8 +109,8 @@ const WeekRow: React.FC<WeekRowProps> = ({ week, people, month, handleDateClick,
       {daysInfo.map((dayInfo, index) => (
         <TableCell
           key={index}
-          backgroundColor={dayInfo.backgroundColor}
-          isClickable={!dayInfo.isPlaceholder}
+          $backgroundColor={dayInfo.backgroundColor}
+          $isClickable={!dayInfo.isPlaceholder}
           onClick={!dayInfo.isPlaceholder ? () => handleDateClick(dayInfo.date) : undefined}
         >
           {!dayInfo.isPlaceholder && (
