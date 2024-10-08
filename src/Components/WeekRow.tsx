@@ -39,8 +39,8 @@ const Spinner = styled.div`
 const TableCell = styled.td<{ $backgroundColor: string; $isClickable: boolean }>`
   background-color: ${({ $backgroundColor }) => $backgroundColor};
   border: solid 1px #ddd;
-  width: 12.5vw;
-  height: 12.5vw;
+  width12.5vw;
+  height: min(12.5vw, 50px);
   text-align: center;
   vertical-align: top;
   cursor: ${({ $isClickable }) => ($isClickable ? 'pointer' : 'default')};
@@ -71,7 +71,7 @@ const AvailableSlots = styled.span`
   color: #4e9f3d;
   align-self: center;
   margin-top: auto;
-  margin-bottom: 2px;
+  margin-bottom: 3px;
 `;
 
 const WeekRow: React.FC<WeekRowProps> = ({ week, people, month, handleDateClick, isDateInRange }) => {

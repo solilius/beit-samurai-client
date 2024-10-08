@@ -6,8 +6,11 @@ import BookingForm from './Components/BookingForm'; // The form page component
 import './App.css';
 
 const Container = styled.div`
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
+`;
+
+const RouterContainer = styled.div`
   padding: 20px;
   background-color: #f5f5f5; /* Light background to resemble traditional Japanese paper */
   border-radius: 8px;
@@ -16,18 +19,22 @@ const Container = styled.div`
 
 const TitleImage = styled.img`
   width: 100vw;
+    max-width: 600px;
+
 `;
 
 const App: React.FC = () => {
   return (
     <Router>
-      <TitleImage src='/beit-samurai.jpg' />
       <Container>
-        <Routes>
-          <Route path="/booking" element={<BookingComponent />} />
-          <Route path="/form" element={<BookingForm />} />
-          <Route path="/" element={<BookingComponent />} />
-        </Routes>
+        <TitleImage src='/beit-samurai.jpg' />
+        <RouterContainer>
+          <Routes>
+            <Route path="/booking" element={<BookingComponent />} />
+            <Route path="/form" element={<BookingForm />} />
+            <Route path="/" element={<BookingComponent />} />
+          </Routes>
+        </RouterContainer>
       </Container>
     </Router>
   );
