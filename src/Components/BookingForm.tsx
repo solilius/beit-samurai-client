@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 enum Gender {
-    Male = "Male",
-    Female = "Female",
+    Male = "זכר",
+    Female = "נקבה",
 }
 
 type LocationState = {
@@ -23,6 +23,13 @@ const Row = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
+`;
+
+const DatesContainer = styled.div`
+    direction: ltr;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 `;
 
 const Label = styled.label`
@@ -56,6 +63,7 @@ const CheckboxText = styled.span`
 `;
 
 const Button = styled.button`
+    width: 100px;
     padding: 10px 20px;
     background-color: ${({ disabled }) => (disabled ? 'grey' : 'green')};
     color: white;
@@ -63,6 +71,14 @@ const Button = styled.button`
     border-radius: 4px;
     cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
     margin-top: 50px;
+`;
+
+const SendButtonContainer = styled.div`
+  direction: ltr;
+  display: flex;
+  justify-content: flex-start; /* Aligns button to the left */
+  margin-top: 10px;
+  width: 100%;
 `;
 
 const BookingForm: React.FC = () => {
@@ -95,11 +111,11 @@ const BookingForm: React.FC = () => {
             .map((guest, index) => `${index + 1}. ${guest.name} (${guest.gender.charAt(0)})`)
             .join('\n');
         const message = `Shalom! I would like to book *${people}* beds\n`
-        + `from *${start}* to *${end}*\n`
-        + `*Phone Number:* ${phoneNumber}\n`
-        + `${guestsDetails}\n`
-        + `*Private Room:* ${isPrivateRoom ? 'Yes' : 'No'}\n`
-        + `*Gender specific room:* ${isGenderSpecificRoom ? 'Yes' : 'No'}`
+            + `from *${start}* to *${end}*\n`
+            + `*Phone Number:* ${phoneNumber}\n`
+            + `${guestsDetails}\n`
+            + `*Private Room:* ${isPrivateRoom ? 'Yes' : 'No'}\n`
+            + `*Gender specific room:* ${isGenderSpecificRoom ? 'Yes' : 'No'}`
 
         const url = `https://wa.me/${phoneNumberToSend}?text=${encodeURIComponent(message)}`;
         window.location.href = url;
@@ -107,11 +123,13 @@ const BookingForm: React.FC = () => {
 
     return (
         <>
-            <h1>Booking for {start} - {end}</h1>
+        <DatesContainer>
+            <h2>{start} - {end}</h2>
+        </DatesContainer>
             <br />
 
             <Label>
-                Phone Number:
+                טלפון:
                 <Input
                     type="tel"
                     value={phoneNumber}
@@ -120,10 +138,10 @@ const BookingForm: React.FC = () => {
                 />
             </Label>
             <br />
-            <h3>Details of Each Person:</h3>
+            <h3>פרטי האורחים:</h3>
             {guests.map((guest, index) => (
                 <Row key={index}>
-                    <Label>#{index + 1} Name:</Label>
+                    <Label>{index + 1}. שם:</Label>
                     <Input
                         type="text"
                         value={guest.name}
@@ -135,7 +153,7 @@ const BookingForm: React.FC = () => {
                         onChange={(e) => handleGuestChange(index, 'gender', e.target.value)}
                         required
                     >
-                        <option value="">Select Gender</option>
+                        <option value="">בחר  מגדר</option>
                         <option value={Gender.Male}>{Gender.Male}</option>
                         <option value={Gender.Female}>{Gender.Female}</option>
                     </Select>
@@ -143,7 +161,7 @@ const BookingForm: React.FC = () => {
             ))}
             <br />
             <CheckboxSection>
-                <CheckboxText>Require a private room</CheckboxText>
+                <CheckboxText>עדיפות לחדר פרטי</CheckboxText>
                 <input
                     type="checkbox"
                     checked={isPrivateRoom}
@@ -151,19 +169,21 @@ const BookingForm: React.FC = () => {
                 />
             </CheckboxSection>
             <CheckboxSection>
-                <CheckboxText>Gender specific room</CheckboxText>
+                <CheckboxText>עדיפות לחדר נפרד לנשים</CheckboxText>
                 <input
                     type="checkbox"
                     checked={isGenderSpecificRoom}
                     onChange={(e) => setIsGenderSpecificRoom(e.target.checked)}
                 />
             </CheckboxSection>
-            <Button
-                onClick={redirectToWA}
-                disabled={!phoneNumber || guests.some(g => !g.name || !g.gender)}
-            >
-                Send
-            </Button>
+            <SendButtonContainer>
+                <Button
+                    onClick={redirectToWA}
+                    disabled={!phoneNumber || guests.some(g => !g.name || !g.gender)}
+                >
+                    שלח
+                </Button>
+            </SendButtonContainer>
         </>
     );
 };

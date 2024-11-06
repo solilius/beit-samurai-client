@@ -142,7 +142,7 @@ const WeekRow: React.FC<WeekRowProps> = ({ week, people, month, handleDateClick,
               { isLoading ? (
                 <Spinner /> 
               ) : (
-                <AvailableSlots>{dayInfo.availableSlots} beds</AvailableSlots>
+                <AvailableSlots>{dayInfo.availableSlots} מיטות</AvailableSlots>
               )}
             </CellContent>
           )}

@@ -45,6 +45,18 @@ const ButtonGroup = styled.div`
   gap: 10px;
 `;
 
+const ContinueButtonContainer = styled.div`
+  direction: ltr;
+  display: flex;
+  justify-content: flex-start; /* Aligns button to the left */
+  margin-top: 10px;
+  width: 100%;
+`;
+
+const ContinueButton = styled(Button)`
+  width:100px;
+`;
+
 const BookingComponent: React.FC = () => {
   const navigate = useNavigate();
   const { bookingData } = useBooking();
@@ -125,13 +137,13 @@ const BookingComponent: React.FC = () => {
         <table>
           <thead>
             <tr>
-              <th>Sun</th>
-              <th>Mon</th>
-              <th>Tue</th>
-              <th>Wed</th>
-              <th>Thu</th>
-              <th>Fri</th>
-              <th>Sat</th>
+              <th>ראשון</th>
+              <th>שני</th>
+              <th>שלישי</th>
+              <th>רביעי</th>
+              <th>חמישי</th>
+              <th>שישי</th>
+              <th>שבת</th>
             </tr>
           </thead>
           <tbody>
@@ -153,7 +165,7 @@ const BookingComponent: React.FC = () => {
 
   return (
     <>
-        <span>Number of People: &nbsp;&nbsp;</span> 
+        <span>מספר אנשים: &nbsp;&nbsp;</span> 
         <PeopleInput
           type="number"
           value={people}
@@ -165,8 +177,8 @@ const BookingComponent: React.FC = () => {
 
 
       <ButtonGroup>
-        <Button onClick={handlePreviousMonth}>Previous Month</Button>
-        <Button onClick={handleNextMonth}>Next Month</Button>
+        <Button onClick={handlePreviousMonth}>חודש הקודם </Button>
+        <Button onClick={handleNextMonth}>חודש הבא </Button>
       </ButtonGroup>
 
       <h3>{currentMonth.format('MMMM YYYY')}</h3>
@@ -175,13 +187,16 @@ const BookingComponent: React.FC = () => {
       <h3>{currentMonth.clone().add(1, 'month').format('MMMM YYYY')}</h3>
       {renderCalendar(currentMonth.clone().add(1, 'month'))}
 
-      <Button
-        $primary={isBookingAvailable}
-        onClick={() => isBookingAvailable && navigateToForm()}
-        disabled={!isBookingAvailable}
-      >
-        Next
-      </Button>
+      <ContinueButtonContainer>
+        <ContinueButton
+          $primary={isBookingAvailable}
+          onClick={() => isBookingAvailable && navigateToForm()}
+          disabled={!isBookingAvailable}
+        >
+          המשך
+        </ContinueButton>
+      </ContinueButtonContainer>
+
     </>
   );
 };
