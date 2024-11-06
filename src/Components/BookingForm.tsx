@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { config } from '../config';
 
 enum Gender {
     Male = "זכר",
@@ -106,7 +107,6 @@ const BookingForm: React.FC = () => {
     };
 
     const redirectToWA = () => {
-        const phoneNumberToSend = '000000000000';
         const guestsDetails = guests
             .map((guest, index) => `${index + 1}. ${guest.name} (${guest.gender.charAt(0)})`)
             .join('\n');
@@ -117,7 +117,7 @@ const BookingForm: React.FC = () => {
             + `*Private Room:* ${isPrivateRoom ? 'Yes' : 'No'}\n`
             + `*Gender specific room:* ${isGenderSpecificRoom ? 'Yes' : 'No'}`
 
-        const url = `https://wa.me/${phoneNumberToSend}?text=${encodeURIComponent(message)}`;
+        const url = `https://wa.me/${config.phoneNumberToSend}?text=${encodeURIComponent(message)}`;
         window.location.href = url;
     };
 

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import moment from 'moment';
+import { config } from './config';
 
 type WeeklyBooking = { [key: string]: number };
 type BookingData = { [key: string]: WeeklyBooking };
@@ -27,7 +28,7 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
   const [bookingData, setBookingData] = useState<BookingData>({});
 
   const fetchBookingData = async (weekDate: string): Promise<void> => {
-    const response = await fetch(`http://localhost:3005/available-beds/${weekDate}`);
+    const response = await fetch(`${config.serverUrl}/available-beds/${weekDate}`);
     const data = await response.json();
   
     // Save all dates returned in the data object
