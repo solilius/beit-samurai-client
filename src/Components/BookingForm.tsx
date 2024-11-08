@@ -56,6 +56,13 @@ const CheckboxSection = styled.label`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        min-width: 16px;
+        min-height: 16px;
+        accent-color: green; /* Sets checkbox color */
+    }
 `;
 
 const CheckboxText = styled.span`
