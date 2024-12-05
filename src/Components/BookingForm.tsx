@@ -130,9 +130,9 @@ const BookingForm: React.FC = () => {
 
     return (
         <>
-        <DatesContainer>
-            <h2>{start} - {end}</h2>
-        </DatesContainer>
+            <DatesContainer>
+                <h2>{start} - {end}</h2>
+            </DatesContainer>
             <br />
 
             <Label>
@@ -167,7 +167,7 @@ const BookingForm: React.FC = () => {
                 </Row>
             ))}
             <br />
-            <CheckboxSection>
+            {people > 1 && <CheckboxSection >
                 <CheckboxText>עדיפות לחדר פרטי</CheckboxText>
                 <input
                     type="checkbox"
@@ -175,6 +175,7 @@ const BookingForm: React.FC = () => {
                     onChange={(e) => setIsPrivateRoom(e.target.checked)}
                 />
             </CheckboxSection>
+            }
             <CheckboxSection>
                 <CheckboxText>עדיפות לחדר נפרד לנשים</CheckboxText>
                 <input
