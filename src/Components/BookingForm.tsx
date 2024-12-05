@@ -126,6 +126,7 @@ const BookingForm: React.FC = () => {
 
         const url = `https://wa.me/${config.phoneNumberToSend}?text=${encodeURIComponent(message)}`;
         window.location.href = url;
+        console.log("Form sent to WA");
     };
 
     return (
