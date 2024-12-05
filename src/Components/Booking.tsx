@@ -120,6 +120,8 @@ const BookingComponent: React.FC = () => {
   };
 
   const navigateToForm = () => {
+    console.log("Go to form clicked");
+    
     navigate('/form', {
       state: {
         people,
