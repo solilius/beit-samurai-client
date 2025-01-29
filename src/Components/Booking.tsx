@@ -107,7 +107,7 @@ const BookingComponent: React.FC = () => {
     if (!start || !end) return false;
 
     let current = start.clone();
-    while (current.isSameOrBefore(end)) {
+    while (current.isBefore(end)) {
       const weekData = bookingData[current.clone().startOf('week').format('DD-MM-YY')];
       const formattedDate = current.format('DD/MM/YY');
       const slots = weekData ? weekData[formattedDate] : 0;
