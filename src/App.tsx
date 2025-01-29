@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { styled } from 'styled-components';
 import moment from 'moment';
 import 'moment/locale/he';
+import { Analytics } from "@vercel/analytics/react"
 import BookingComponent from './Components/Booking';
 import BookingForm from './Components/BookingForm'; // The form page component
 import './App.css';
@@ -30,6 +31,7 @@ const TitleImage = styled.img`
 const App: React.FC = () => {
   return (
     <Router>
+      <Analytics/>
       <Container>
         <TitleImage src='/beit-samurai.jpg' />
         <RouterContainer>
