@@ -89,6 +89,11 @@ const SendButtonContainer = styled.div`
   width: 100%;
 `;
 
+const Note = styled.p`
+    color: grey;
+    font-size: 12px;
+`;
+
 const BookingForm: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -102,7 +107,6 @@ const BookingForm: React.FC = () => {
 
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [guests, setGuests] = useState<GuestInfo[]>(Array(people).fill({ name: '', gender: '' }));
-    const [isPrivateRoom, setIsPrivateRoom] = useState<boolean>(false);
     const [isGenderSpecificRoom, setIsGenderSpecificRoom] = useState<boolean>(false);
 
     const handleGuestChange = (index: number, field: 'name' | 'gender', value: string) => {
@@ -121,7 +125,6 @@ const BookingForm: React.FC = () => {
             + `from *${start}* to *${end}*\n`
             + `*Phone Number:* ${phoneNumber}\n`
             + `${guestsDetails}\n`
-            + `*Private Room:* ${isPrivateRoom ? 'Yes' : 'No'}\n`
             + `*Gender specific room:* ${isGenderSpecificRoom ? 'Yes' : 'No'}`
 
         const url = `https://wa.me/${config.phoneNumberToSend}?text=${encodeURIComponent(message)}`;
@@ -168,15 +171,6 @@ const BookingForm: React.FC = () => {
                 </Row>
             ))}
             <br />
-            {people > 1 && <CheckboxSection >
-                <CheckboxText>עדיפות לחדר פרטי</CheckboxText>
-                <input
-                    type="checkbox"
-                    checked={isPrivateRoom}
-                    onChange={(e) => setIsPrivateRoom(e.target.checked)}
-                />
-            </CheckboxSection>
-            }
             <CheckboxSection>
                 <CheckboxText>עדיפות לחדר נפרד לנשים</CheckboxText>
                 <input
@@ -185,6 +179,7 @@ const BookingForm: React.FC = () => {
                     onChange={(e) => setIsGenderSpecificRoom(e.target.checked)}
                 />
             </CheckboxSection>
+            <Note>(החדרים בדר''כ מעורבים אך נשתדל להפריד כאשר מתאפשר)</Note>
             <SendButtonContainer>
                 <Button
                     onClick={redirectToWA}
